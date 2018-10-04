@@ -16,7 +16,6 @@ import com.vmoskvyak.reservations.viewmodel.TablesViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-
 class TablesFragment : DaggerFragment() {
 
     @Inject
