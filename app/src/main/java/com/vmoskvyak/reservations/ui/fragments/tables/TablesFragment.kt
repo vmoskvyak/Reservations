@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.vmoskvyak.reservations.R
 import com.vmoskvyak.reservations.databinding.FragmentTablesBinding
 import com.vmoskvyak.reservations.network.model.TableModel
+import com.vmoskvyak.reservations.ui.MainActivity
 import com.vmoskvyak.reservations.ui.adapters.TablesAdapter
 import com.vmoskvyak.reservations.viewmodel.TablesViewModel
 import dagger.android.support.DaggerFragment
@@ -31,6 +32,10 @@ class TablesFragment : DaggerFragment() {
 
         initRecycleView(binding)
         showTables()
+
+        arguments?.getString(CUSTOMER_NAME_ARG)?.let {
+            (activity as MainActivity).setToolbarTitle(it)
+        }
 
         return binding.root
     }
@@ -66,9 +71,16 @@ class TablesFragment : DaggerFragment() {
 
     companion object {
         const val TAG = "TablesFragment"
+        private const val CUSTOMER_NAME_ARG = "customer.name.arg"
 
-        fun newInstance(): TablesFragment {
-            return TablesFragment()
+        fun newInstance(customerName: String): TablesFragment {
+            val bundle = Bundle()
+            bundle.putString(CUSTOMER_NAME_ARG, customerName)
+
+            val tablesFragment = TablesFragment()
+            tablesFragment.arguments = bundle
+
+            return tablesFragment
         }
     }
 

@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.vmoskvyak.reservations.R
 import com.vmoskvyak.reservations.databinding.FragmentCustomerListBinding
 import com.vmoskvyak.reservations.network.model.CustomerModel
+import com.vmoskvyak.reservations.ui.MainActivity
 import com.vmoskvyak.reservations.ui.adapters.CustomersAdapter
 import com.vmoskvyak.reservations.ui.fragments.tables.TablesFragment
 import com.vmoskvyak.reservations.viewmodel.CustomersViewModel
@@ -39,6 +40,8 @@ class CustomerListFragment : DaggerFragment() {
 
         initRecycleView(binding)
         showCustomers()
+
+        (activity as MainActivity).setToolbarTitle(getString(R.string.app_name))
 
         return binding.root
     }
@@ -69,9 +72,9 @@ class CustomerListFragment : DaggerFragment() {
 
     private fun initAdapter() {
         customersAdapter.onItemClickListener = object : OnCustomerItemClickListener {
-            override fun onItemClick() {
+            override fun onItemClick(customerName: String) {
                 fragmentManager?.beginTransaction()?.replace(R.id.fl_container,
-                        TablesFragment.newInstance(),
+                        TablesFragment.newInstance(customerName),
                         TablesFragment.TAG)?.addToBackStack(CustomerListFragment.TAG)?.commit()
             }
         }

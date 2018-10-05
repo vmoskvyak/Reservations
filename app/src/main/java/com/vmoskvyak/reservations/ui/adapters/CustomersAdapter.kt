@@ -30,7 +30,7 @@ class CustomersAdapter :
         holderData.binding?.viewModel = customer?.let { CustomerItemViewModel(it) }
         holderData.binding?.click = object : OnCustomerClickListener {
             override fun onCustomerClick(customerItemViewModel: CustomerItemViewModel) {
-                onItemClickListener?.onItemClick()
+                onItemClickListener?.onItemClick(customerItemViewModel.getName())
             }
         }
     }
