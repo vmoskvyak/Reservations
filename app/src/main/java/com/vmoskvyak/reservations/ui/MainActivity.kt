@@ -2,7 +2,6 @@ package com.vmoskvyak.reservations.ui
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import com.vmoskvyak.reservations.R
@@ -42,17 +41,6 @@ class MainActivity : AppCompatActivity() {
 
     fun setToolbarTitle(title: String) {
         toolbar?.title = title
-    }
-
-    fun showErrorDialog(message: String?) {
-        val alertDialog = AlertDialog.Builder(this).create()
-        alertDialog.setTitle(R.string.error)
-        alertDialog.setMessage(message)
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,
-                getString(android.R.string.ok)) { dialog, _ ->
-            dialog.dismiss()
-        }
-        alertDialog.show()
     }
 
 }

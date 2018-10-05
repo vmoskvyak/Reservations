@@ -11,7 +11,7 @@ class CustomerModel {
     var lastName: String = ""
 
     @SerializedName("id")
-    var id: Long = 0
+    var id: Long? = 0
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -29,7 +29,7 @@ class CustomerModel {
     override fun hashCode(): Int {
         var result = firstName.hashCode()
         result = 31 * result + lastName.hashCode()
-        result = 31 * result + id.hashCode()
+        result = 31 * result + (id?.hashCode() ?: 0)
         return result
     }
 

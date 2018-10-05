@@ -9,10 +9,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
+import android.widget.Toast
 import com.vmoskvyak.reservations.R
 import com.vmoskvyak.reservations.databinding.FragmentCustomerListBinding
 import com.vmoskvyak.reservations.network.model.CustomerModel
-import com.vmoskvyak.reservations.ui.MainActivity
 import com.vmoskvyak.reservations.ui.adapters.CustomersAdapter
 import com.vmoskvyak.reservations.ui.fragments.tables.TablesFragment
 import com.vmoskvyak.reservations.viewmodel.CustomersViewModel
@@ -44,7 +44,7 @@ class CustomerListFragment : DaggerFragment() {
 
     private fun showCustomers() {
         viewModel.requestStatus.observe(this, Observer<String> {
-            (activity as MainActivity).showErrorDialog(it)
+            Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         })
 
         viewModel.loadCustomers().observe(this, Observer<List<CustomerModel>> {

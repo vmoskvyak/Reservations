@@ -8,9 +8,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.vmoskvyak.reservations.R
 import com.vmoskvyak.reservations.databinding.FragmentTablesBinding
-import com.vmoskvyak.reservations.ui.MainActivity
 import com.vmoskvyak.reservations.ui.adapters.TablesAdapter
 import com.vmoskvyak.reservations.viewmodel.TablesViewModel
 import dagger.android.support.DaggerFragment
@@ -36,7 +36,7 @@ class TablesFragment : DaggerFragment() {
 
     private fun showTables() {
         viewModel.requestStatus.observe(this, Observer<String> {
-            (activity as MainActivity).showErrorDialog(it)
+            Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         })
 
         viewModel.loadTables().observe(this, Observer<List<Boolean>> {
