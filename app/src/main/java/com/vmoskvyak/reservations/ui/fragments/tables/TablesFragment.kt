@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.vmoskvyak.reservations.R
 import com.vmoskvyak.reservations.databinding.FragmentTablesBinding
+import com.vmoskvyak.reservations.network.model.TableModel
 import com.vmoskvyak.reservations.ui.adapters.TablesAdapter
 import com.vmoskvyak.reservations.viewmodel.TablesViewModel
 import dagger.android.support.DaggerFragment
@@ -39,8 +40,8 @@ class TablesFragment : DaggerFragment() {
             Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         })
 
-        viewModel.loadTables().observe(this, Observer<List<Boolean>> {
-            it?.let { list -> adapter.setTableReservations(list) }
+        viewModel.loadTables().observe(this, Observer<List<TableModel>> {
+            it?.let { list -> adapter.submitList(list) }
         })
     }
 
@@ -51,6 +52,15 @@ class TablesFragment : DaggerFragment() {
         val layoutManager = GridLayoutManager(activity, 2)
         recyclerView.layoutManager = layoutManager
 
+        initAdapter(recyclerView)
+    }
+
+    private fun initAdapter(recyclerView: RecyclerView) {
+        adapter.onItemClickListener = object : OnTableItemClickListener {
+            override fun onItemClick(tableId: Long?, reserved: Boolean) {
+                viewModel.updateTableReservation(tableId, !reserved)
+            }
+        }
         recyclerView.adapter = adapter
     }
 

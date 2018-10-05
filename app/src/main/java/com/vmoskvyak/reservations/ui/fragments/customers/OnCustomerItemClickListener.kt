@@ -1,6 +1,6 @@
 package com.vmoskvyak.reservations.ui.fragments.customers
 
-interface OnItemClickListener {
+interface OnCustomerItemClickListener {
 
     fun onItemClick()
 

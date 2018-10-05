@@ -37,6 +37,10 @@ class ReservationsRepositoryImpl
         return reservationsDAO.getTableReservations()
     }
 
+    override fun updateTableReservation(id: Long?, reserved: Boolean) {
+        reservationsDAO.updateTableReservation(id, reserved)
+    }
+
     override fun hasCustomersLocal(): Boolean {
         return reservationsDAO.hasCustomers().isNotEmpty()
     }

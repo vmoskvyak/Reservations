@@ -28,7 +28,8 @@ class CustomerListFragment : DaggerFragment() {
     private var searchView: SearchView? = null
     private var recyclerView: RecyclerView? = null
 
-    private val customersAdapter = CustomersAdapter(getAlphabeticalComparator())
+    private val customersAdapter = CustomersAdapter()
+    private var customersList: MutableList<CustomerModel> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,9 +49,12 @@ class CustomerListFragment : DaggerFragment() {
         })
 
         viewModel.loadCustomers().observe(this, Observer<List<CustomerModel>> {
-            it?.let { list -> customersAdapter.setCustomers(list) }
+            it?.let { list ->
+                customersList.clear()
+                customersList.addAll(list)
+                customersAdapter.submitList(list)
+            }
         })
-
     }
 
     private fun initRecycleView(binding: FragmentCustomerListBinding) {
@@ -64,15 +68,11 @@ class CustomerListFragment : DaggerFragment() {
     }
 
     private fun initAdapter() {
-        customersAdapter.onItemClickListener = object : OnItemClickListener {
+        customersAdapter.onItemClickListener = object : OnCustomerItemClickListener {
             override fun onItemClick() {
-                fragmentManager?.
-                        beginTransaction()?.
-                        replace(R.id.fl_container,
-                                TablesFragment.newInstance(),
-                                TablesFragment.TAG)?.
-                        addToBackStack(CustomerListFragment.TAG)?.
-                        commit()
+                fragmentManager?.beginTransaction()?.replace(R.id.fl_container,
+                        TablesFragment.newInstance(),
+                        TablesFragment.TAG)?.addToBackStack(CustomerListFragment.TAG)?.commit()
             }
         }
 
@@ -98,9 +98,8 @@ class CustomerListFragment : DaggerFragment() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                val customersList = customersAdapter.customersList
                 if (newText.isEmpty()) {
-                    customersAdapter.replaceAllData(customersList)
+                    customersAdapter.submitList(customersList)
                     recyclerView?.scrollToPosition(0)
                     return true
                 }
@@ -109,8 +108,9 @@ class CustomerListFragment : DaggerFragment() {
                         .filter { it ->
                             val fullName = it.firstName.toLowerCase() + " " +
                                     it.lastName.toLowerCase()
-                            fullName.contains(newText) }
-                customersAdapter.replaceAllData(filter)
+                            fullName.contains(newText)
+                        }
+                customersAdapter.submitList(filter)
                 recyclerView?.scrollToPosition(0)
 
                 return true
@@ -120,11 +120,6 @@ class CustomerListFragment : DaggerFragment() {
 
     companion object {
         const val TAG = "CustomerListFragment"
-
-        private fun getAlphabeticalComparator(): Comparator<CustomerModel> {
-            return Comparator { a, b ->
-                a.firstName.toLowerCase().compareTo(b.firstName.toLowerCase()) }
-        }
     }
 
 }

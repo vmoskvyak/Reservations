@@ -5,21 +5,28 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import com.vmoskvyak.reservations.datasource.mapper.TablesToTablesEntityMapper
 import com.vmoskvyak.reservations.db.entity.TableDTO
+import com.vmoskvyak.reservations.network.model.TableModel
 import com.vmoskvyak.reservations.repository.ReservationsRepository
 import kotlinx.coroutines.experimental.launch
 
-class GetTablesDataSource(
+class TablesDataSource(
         reservationsRepository: ReservationsRepository,
         requestStatus: MutableLiveData<String>) :
-        BaseDataSource<List<Boolean>>(reservationsRepository, requestStatus) {
+        BaseDataSource<List<TableModel>>(reservationsRepository, requestStatus) {
 
-    override fun loadData(): LiveData<List<Boolean>> {
+    fun updateData(tableId: Long?, reserved: Boolean) {
+        launch {
+            reservationsRepository.updateTableReservation(tableId, reserved)
+        }
+    }
+
+    override fun loadData(): LiveData<List<TableModel>> {
         val mapper = TablesToTablesEntityMapper()
         refreshTables(mapper)
 
         val tableDTO: LiveData<List<TableDTO>> = reservationsRepository.getTablesFromLocal()
 
-        val mediator = MediatorLiveData<List<Boolean>>()
+        val mediator = MediatorLiveData<List<TableModel>>()
         mediator.addSource(tableDTO) {
             mediator.value = it?.let { it1 -> mapper.reverseMap(it1) }
         }
@@ -42,7 +49,14 @@ class GetTablesDataSource(
                     return@launch
                 }
 
-                reservationsRepository.saveTablesToLocal(mapper.map(body))
+                val tableModelList = ArrayList<TableModel>(body.size)
+
+                body.forEach {
+                    val element = TableModel()
+                    element.reserved = it
+                    tableModelList.add(element) }
+
+                reservationsRepository.saveTablesToLocal(mapper.map(tableModelList))
             } catch (exception: Exception) {
                 requestStatus.postValue("Can't load data. Please check internet connection")
             }

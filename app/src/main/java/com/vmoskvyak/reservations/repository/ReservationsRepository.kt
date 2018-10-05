@@ -20,6 +20,8 @@ interface ReservationsRepository {
 
     fun getTablesFromLocal() : LiveData<List<TableDTO>>
 
+    fun updateTableReservation(id: Long?, reserved: Boolean)
+
     fun hasCustomersLocal() : Boolean
 
     fun hasTablesLocal() : Boolean

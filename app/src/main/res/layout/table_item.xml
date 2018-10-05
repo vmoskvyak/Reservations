@@ -6,13 +6,17 @@
     <data>
         <variable
             name="viewModel"
-            type="com.vmoskvyak.reservations.ui.fragments.tables.TableItemViewModel"/>
+            type="com.vmoskvyak.reservations.ui.fragments.tables.TableItemViewModel" />
+        <variable
+            name="click"
+            type="com.vmoskvyak.reservations.ui.adapters.TablesAdapter.OnTableClickListener" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:onClick="@{()->click.onTableClick(viewModel)}">
         <ImageView
             android:id="@+id/iv_table"
             android:layout_width="120dp"

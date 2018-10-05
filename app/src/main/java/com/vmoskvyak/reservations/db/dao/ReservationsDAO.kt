@@ -32,6 +32,9 @@ interface ReservationsDAO {
     @Insert(onConflict = REPLACE)
     fun insertTableReservations(tableDTO: List<TableDTO>)
 
+    @Query("update table_reservations set is_reserved = :reserved where id == :id")
+    fun updateTableReservation(id: Long?, reserved: Boolean)
+
     @Query("delete from table_reservations")
     fun deleteTableReservations()
 
