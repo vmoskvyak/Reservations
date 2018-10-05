@@ -8,11 +8,12 @@ import com.vmoskvyak.reservations.db.entity.TableDTO
 import com.vmoskvyak.reservations.network.model.TableModel
 import com.vmoskvyak.reservations.repository.ReservationsRepository
 import kotlinx.coroutines.experimental.launch
+import javax.inject.Inject
 
-class TablesDataSource(
-        reservationsRepository: ReservationsRepository,
-        requestStatus: MutableLiveData<String>) :
-        BaseDataSource<List<TableModel>>(reservationsRepository, requestStatus) {
+class TablesDataSource
+@Inject constructor(
+        private val reservationsRepository: ReservationsRepository,
+        val errorMessageObserver: MutableLiveData<String>) {
 
     fun updateData(tableId: Long?, reserved: Boolean) {
         launch {
@@ -20,7 +21,7 @@ class TablesDataSource(
         }
     }
 
-    override fun loadData(): LiveData<List<TableModel>> {
+    fun loadData(): LiveData<List<TableModel>> {
         val mapper = TablesToTablesEntityMapper()
         refreshTables(mapper)
 
@@ -34,6 +35,13 @@ class TablesDataSource(
         return mediator
     }
 
+    fun resetData() {
+        launch {
+            reservationsRepository.clearReservations()
+            loadData()
+        }
+    }
+
     private fun refreshTables(mapper: TablesToTablesEntityMapper) {
         launch {
             if (reservationsRepository.hasTablesLocal()) {
@@ -45,7 +53,7 @@ class TablesDataSource(
                 val body = response.body()
 
                 if (!response.isSuccessful || body == null) {
-                    requestStatus.postValue(response.message())
+                    errorMessageObserver.postValue(response.message())
                     return@launch
                 }
 
@@ -58,7 +66,8 @@ class TablesDataSource(
 
                 reservationsRepository.saveTablesToLocal(mapper.map(tableModelList))
             } catch (exception: Exception) {
-                requestStatus.postValue("Can't load data. Please check internet connection")
+                errorMessageObserver
+                        .postValue("Can't load data. Please check internet connection")
             }
         }
     }

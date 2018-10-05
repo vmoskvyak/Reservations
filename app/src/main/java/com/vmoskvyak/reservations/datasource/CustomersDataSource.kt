@@ -8,13 +8,14 @@ import com.vmoskvyak.reservations.db.entity.CustomerDTO
 import com.vmoskvyak.reservations.network.model.CustomerModel
 import com.vmoskvyak.reservations.repository.ReservationsRepository
 import kotlinx.coroutines.experimental.launch
+import javax.inject.Inject
 
-class GetCustomersDataSource(
-        reservationsRepository: ReservationsRepository,
-        requestStatus: MutableLiveData<String>):
-        BaseDataSource<List<CustomerModel>>(reservationsRepository, requestStatus){
+class CustomersDataSource
+@Inject constructor(
+        private val reservationsRepository: ReservationsRepository,
+        val errorMessageObserver: MutableLiveData<String>) {
 
-    override fun loadData() : LiveData<List<CustomerModel>> {
+    fun loadData() : LiveData<List<CustomerModel>> {
         val mapper = CustomerToCustomerEntityMapper()
         refreshCustomers(mapper)
 
@@ -29,6 +30,13 @@ class GetCustomersDataSource(
         return mediator
     }
 
+    fun resetData() {
+        launch {
+            reservationsRepository.clearCustomers()
+            loadData()
+        }
+    }
+
     private fun refreshCustomers(mapper: CustomerToCustomerEntityMapper) {
         launch {
             if (reservationsRepository.hasCustomersLocal()) {
@@ -40,13 +48,14 @@ class GetCustomersDataSource(
                 val body = response.body()
 
                 if (!response.isSuccessful || body == null) {
-                    requestStatus.postValue(response.message())
+                    errorMessageObserver.postValue(response.message())
                     return@launch
                 }
 
                 reservationsRepository.saveCustomersToLocal(mapper.map(body))
             } catch (exception: Exception) {
-                requestStatus.postValue("Can't load data. Please check internet connection")
+                errorMessageObserver
+                        .postValue("Can't load data. Please check internet connection")
             }
         }
     }

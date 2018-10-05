@@ -49,4 +49,12 @@ class ReservationsRepositoryImpl
         return reservationsDAO.hasTableReservations().isNotEmpty()
     }
 
+    override fun clearCustomers() {
+        reservationsDAO.deleteCustomers()
+    }
+
+    override fun clearReservations() {
+        reservationsDAO.deleteTableReservations()
+    }
+
 }

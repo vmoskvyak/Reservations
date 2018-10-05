@@ -1,12 +1,18 @@
 package com.vmoskvyak.reservations.ui
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import com.vmoskvyak.reservations.R
 import com.vmoskvyak.reservations.databinding.ActivityMainBinding
+import com.vmoskvyak.reservations.manager.ReservationsBroadcastReceiver
 import com.vmoskvyak.reservations.ui.fragments.customers.CustomerListFragment
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +31,23 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.fl_container, CustomerListFragment(), CustomerListFragment.TAG)
                     .commit()
         }
+
+        setupAlarmManager()
+    }
+
+    private fun setupAlarmManager() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val broadcastIntent = Intent(this, ReservationsBroadcastReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+                this, 0, broadcastIntent, 0
+        )
+
+        val updateTime = TimeUnit.MINUTES.toMillis(10)
+        alarmManager.setInexactRepeating(
+                AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + updateTime,
+                updateTime,
+                pendingIntent)
     }
 
     private fun initToolbar(binding: ActivityMainBinding) {

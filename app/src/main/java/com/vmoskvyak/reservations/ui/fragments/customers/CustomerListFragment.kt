@@ -44,7 +44,7 @@ class CustomerListFragment : DaggerFragment() {
     }
 
     private fun showCustomers() {
-        viewModel.requestStatus.observe(this, Observer<String> {
+        viewModel.getErrorMessageObserver().observe(this, Observer<String> {
             Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         })
 

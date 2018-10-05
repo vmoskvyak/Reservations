@@ -4,6 +4,7 @@ import android.app.Application
 import com.vmoskvyak.githubreposearch.di.builder.ActivityBuilder
 import com.vmoskvyak.githubreposearch.di.builder.FragmentBuilder
 import com.vmoskvyak.reservations.ReservationsApplication
+import com.vmoskvyak.reservations.di.builder.BroadcastReceiverBuilder
 import com.vmoskvyak.reservations.di.mudules.DataModule
 import com.vmoskvyak.reservations.di.mudules.NetworkModule
 import com.vmoskvyak.reservations.di.mudules.RoomModule
@@ -21,6 +22,7 @@ import dagger.android.support.DaggerApplication
     NetworkModule::class,
     DataModule::class,
     RoomModule::class,
+    BroadcastReceiverBuilder::class,
     ActivityBuilder::class,
     FragmentBuilder::class])
 interface AppComponent : AndroidInjector<DaggerApplication> {

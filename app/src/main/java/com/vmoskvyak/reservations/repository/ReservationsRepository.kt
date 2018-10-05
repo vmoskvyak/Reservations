@@ -26,4 +26,8 @@ interface ReservationsRepository {
 
     fun hasTablesLocal() : Boolean
 
+    fun clearCustomers()
+
+    fun clearReservations()
+
 }
