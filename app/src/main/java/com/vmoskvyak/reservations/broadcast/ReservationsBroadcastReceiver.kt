@@ -1,4 +1,4 @@
-package com.vmoskvyak.reservations.manager
+package com.vmoskvyak.reservations.broadcast
 
 import android.content.BroadcastReceiver
 import android.content.Context

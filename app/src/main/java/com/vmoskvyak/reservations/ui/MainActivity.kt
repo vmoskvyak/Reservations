@@ -9,8 +9,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import com.vmoskvyak.reservations.R
+import com.vmoskvyak.reservations.broadcast.ReservationsBroadcastReceiver
 import com.vmoskvyak.reservations.databinding.ActivityMainBinding
-import com.vmoskvyak.reservations.manager.ReservationsBroadcastReceiver
 import com.vmoskvyak.reservations.ui.fragments.customers.CustomerListFragment
 import java.util.concurrent.TimeUnit
 

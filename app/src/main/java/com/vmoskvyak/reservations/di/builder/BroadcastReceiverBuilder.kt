@@ -1,6 +1,6 @@
 package com.vmoskvyak.reservations.di.builder
 
-import com.vmoskvyak.reservations.manager.ReservationsBroadcastReceiver
+import com.vmoskvyak.reservations.broadcast.ReservationsBroadcastReceiver
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

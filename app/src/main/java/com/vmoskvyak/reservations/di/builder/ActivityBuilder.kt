@@ -1,4 +1,4 @@
-package com.vmoskvyak.githubreposearch.di.builder
+package com.vmoskvyak.reservations.di.builder
 
 import com.vmoskvyak.reservations.ui.MainActivity
 import dagger.Module

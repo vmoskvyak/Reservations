@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+
     <application
         android:name=".ReservationsApplication"
         android:allowBackup="true"
@@ -22,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".manager.ReservationsBroadcastReceiver"/>
+        <receiver android:name=".broadcast.ReservationsBroadcastReceiver"/>
     </application>
 
 </manifest>
